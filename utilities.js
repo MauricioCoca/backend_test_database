@@ -1,6 +1,6 @@
 import {connection} from './server.js';
 
-export function createDatabase(connection) {
+export function createUserTable(connection) {
     let createUserQuery = 'CREATE TABLE `user`(' +
         `id INT,` +
         `name varchar(31),` +
@@ -17,7 +17,7 @@ export function createDatabase(connection) {
         // }
     );
 }
-export function seeedDatabase(connection){
+export function seedUserTable(connection){
     let insertUsersQuery = "INSERT INTO `user`(id, name, email, username, password) VALUES"+
                             "(1, 'Juan Perez', 'juan@perez.com', 'juanperez', 'qwerty'),"+
                             "(2, 'John Doe', 'test@test.com', 'johndoe', 'asdfkj');";
