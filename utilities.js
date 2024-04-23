@@ -1,4 +1,3 @@
-import {connection} from './server.js';
 
 export function createUserTable(connection) {
     let createUserQuery = 'CREATE TABLE `user`(' +

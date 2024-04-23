@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { router } from './routes.js';
-import { createDatabase, seeedDatabase } from './utilities.js';
+import { createUserTable, seedUserTable } from './utilities.js';
 // import {connection} from './database.js';
 import mysql from 'mysql2';
 
@@ -29,8 +29,8 @@ connection.connect((error) => {
     console.log("Connection stablished");
 });
 
-createDatabase(connection);
-seeedDatabase(connection);
+createUserTable(connection);
+seedUserTable(connection);
 
 
 
