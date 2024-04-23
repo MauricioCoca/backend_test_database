@@ -7,41 +7,88 @@ import { connection } from './app.js';
 //     next();
 // });
 router.get('/users', (req, res) => {
-    console.log("hola mundo");
     let query = 'SELECT * FROM `user`;';
-    connection.query(query, (error, results, field) => {
-        console.log(results);
-        console.log(field);
-    });
-
-    res.json({"message":"get all users"});
+    connection.query(
+        query,
+        (error, results, fields) => {
+            if (error) {
+                res.status(500).json({ error: 'Error interno del servidor' });
+                return;
+            }
+            res.json({
+                "users": results,
+                "endpoints": {
+                    "get users": "GET /users",
+                    "get specific user": "GET /users/{id}",
+                    "create user": "POST /users",
+                    "update user": "PUT /users/{id}",
+                    "delete user": "DELETE /users/{id}"
+                }
+            });
+        });
 });
 router.post('/users', (req, res) => {
-    const newUser = req.body;
-    users.push(newUser);
-    res.json(users);
+    let { name, email, username, password } = req.body;
+    //falta verificar que cada campo not null y unique sean controlados
+    let query = "INSERT INTO `user`(name, email, username, password) VALUES" +
+        "(?, ?, ?, ?);";
+    connection.execute(
+        query,
+        [name, email, username, password],
+        (error, results, fields) => {
+            if (error) {
+                res.status(500).json({ error: 'Error interno del servidor' });
+                return;
+            }
+            res.json({
+                "message": "user inserted succesfully",
+                "endpoints": {
+                    "get users": "GET /users",
+                    "get specific user": "GET /users/{id}",
+                    "create user": "POST /users",
+                    "update user": "PUT /users/{id}",
+                    "delete user": "DELETE /users/{id}"
+                }
+            });
+        }
+    );
 });
 router.get('/users/:id', (req, res) => {
     const id = req.params.id;
-    const user = users.find((user) => user.id == id);
-    if (!user) {
-        res.status(404).send('<h1>User not found</h1>');
-        return;
-    }
-    res.json(user);
+    let query = "SELECT * FROM `user` WHERE `user`.id = ?;";
+    connection.execute(
+        query,
+        [id],
+        (error, results, fields) => {
+            if (error) {
+                res.status(500).json({ error: 'Error interno del servidor' });
+                return;
+            }
+            if (results.length == 0) {
+                res.status(404).json({
+                    "message": "user not found"
+                })
+            }
+            else {
+                res.json({
+                    "user": results[0],
+                    "endpoints": {
+                        "get users": "GET /users",
+                        "get specific user": "GET /users/{id}",
+                        "create user": "POST /users",
+                        "update user": "PUT /users/{id}",
+                        "delete user": "DELETE /users/{id}"
+                    }
+                })
+            }
+        }
+    )
 });
 router.put('/users/:id', (req, res) => {
     const id = req.params.id;
-    const newUserInfo = req.body;
-    const requestedUser = users.find((user) => user.id == id);
-    if (!requestedUser) {
-        res.status(404).send('<h1>User not found</h1>');
-        return;
-    }
-    for (let [key, value] of Object.entries(newUserInfo)) {
-        requestedUser[key] = value;
-    }
-    res.json(requestedUser);
+    
+    
+
 });
 router.delete('/users/:id', (req, res) => {
     const id = req.params.id;

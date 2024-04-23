@@ -1,11 +1,11 @@
 
 export function createUserTable(connection) {
     let createUserQuery = 'CREATE TABLE `user`(' +
-        `id INT,` +
-        `name varchar(31),` +
-        `email varchar(31),` +
-        `username varchar(31),` +
-        `password varchar(31),` +
+        `id INT AUTO_INCREMENT,` +
+        `name VARCHAR(31) NOT NULL,` +
+        `email VARCHAR(31) NOT NULL,` +
+        `username VARCHAR(31) NOT NULL UNIQUE,` +
+        `password VARCHAR(31) NOT NULL,` +
         `PRIMARY KEY(id)` +
         `);`;
     connection.query(
@@ -18,7 +18,7 @@ export function createUserTable(connection) {
 }
 export function seedUserTable(connection){
     let insertUsersQuery = "INSERT INTO `user`(id, name, email, username, password) VALUES"+
-                            "(1, 'Juan Perez', 'juan@perez.com', 'juanperez', 'qwerty'),"+
-                            "(2, 'John Doe', 'test@test.com', 'johndoe', 'asdfkj');";
+                            "('Juan Perez', 'juan@perez.com', 'juanperez', 'qwerty'),"+
+                            "('John Doe', 'test@test.com', 'johndoe', 'asdfkj');";
     connection.query(insertUsersQuery);
 }

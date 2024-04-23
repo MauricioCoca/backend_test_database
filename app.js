@@ -15,22 +15,22 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-export const connection = mysql.createConnection({
+export const connection = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "argoniur00",
     database: "backend"
 });
-connection.connect((error) => {
-    if (error) {
-        console.error("Connection problem " + error.stack);
-        return;
-    }
-    console.log("Connection stablished");
-});
+// connection.connect((error) => {
+//     if (error) {
+//         console.error("Connection problem " + error.stack);
+//         return;
+//     }
+//     console.log("Connection stablished");
+// });
 
 createUserTable(connection);
-seedUserTable(connection);
+// seedUserTable(connection);
 
 
 
