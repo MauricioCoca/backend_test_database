@@ -28,7 +28,6 @@ router.get('/users', (req, res) => {
         });
 });
 router.post('/users', (req, res) => {
-    console.log(req.body);
     let { name, email, username, password } = req.body;
     //falta verificar que cada campo not null y unique sean controlados
     let query = "INSERT INTO `user`(name, email, username, password) VALUES" +
@@ -39,6 +38,10 @@ router.post('/users', (req, res) => {
         (error, results, fields) => {
             if (error) {
                 res.status(500).json({ error: 'Error interno del servidor' });
+                return;
+            }
+            if(error.code == "ER_DUP_ENTRY"){
+                res.status(400).json({"message": "Duplicate entry found, make a new request."});
                 return;
             }
             res.json({
@@ -87,8 +90,14 @@ router.get('/users/:id', (req, res) => {
 });
 router.put('/users/:id', (req, res) => {
     const id = req.params.id;
+    if(isNaN(id)){
+        res.status(400).json({
+            "message": "invalid user id"
+        });
+        return;
+    }
     let { name, email, username, password } = req.body;
-    let query = 'SELECT id FROM `user` WHERE `user`.id = ?;';
+    let query = 'SELECT * FROM `user` WHERE `user`.id = ?;';
     let update = 'UPDATE `user` SET name=?, email=?, username=?, password=? where id=?;';
     connection.execute(
         query,
@@ -104,10 +113,10 @@ router.put('/users/:id', (req, res) => {
                 })
             }
             let requestedUser = results[0];
-            requestedUser[name] = name;
-            requestedUser[email] = email;
-            requestedUser[username] = email;
-            requestedUser[password] = email;
+            requestedUser['name'] = name;
+            requestedUser['email'] = email;
+            requestedUser['username'] = email;
+            requestedUser['password'] = password;
             connection.execute(
                 update,
                 [name, email, username, password, id],
@@ -134,6 +143,12 @@ router.put('/users/:id', (req, res) => {
 });
 router.delete('/users/:id', (req, res) => {
     const id = req.params.id;
+    if(isNaN(id)){
+        res.status(400).json({
+            "message": "invalid user id"
+        });
+        return;
+    }
     let query = "SELECT * FROM `user` where id=?;";
     let del = "DELETE FROM `user` WHERE id=?;";
     connection.execute(
@@ -164,7 +179,4 @@ router.delete('/users/:id', (req, res) => {
             }
         }
     );
-
-
-
 });

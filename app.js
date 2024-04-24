@@ -29,7 +29,7 @@ export const connection = mysql.createPool({
 //     console.log("Connection stablished");
 // });
 
-createUserTable(connection);
+// createUserTable(connection);
 // seedUserTable(connection);
 
 
