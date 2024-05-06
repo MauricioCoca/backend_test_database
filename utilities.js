@@ -1,6 +1,6 @@
 
 export function createUserTable(connection) {
-    let createUserQuery = 'CREATE TABLE `user`(' +
+    let createUserQuery = 'CREATE TABLE IF NOT EXISTS `user`(' +
         `id INT AUTO_INCREMENT,` +
         `name VARCHAR(31) NOT NULL,` +
         `email VARCHAR(31) NOT NULL,` +
